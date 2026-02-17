@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #202124;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    #header {
+      padding: 10px;
+      background-color: #292a2d;
+      border-bottom: 1px solid #3c4043;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #title {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #content-frame {
+      flex-grow: 1;
+      border: none;
+      background-color: white;
+    }
+
+    .btn {
+      background: none;
+      border: none;
+      color: #9aa0a6;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    #empty-state {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      color: #9aa0a6;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header" style="display: none;">
+    <span id="title">Loading...</span>
+    <button id="open-ext-btn" class="btn" title="Open in New Tab">&#8599;</button>
+  </div>
+  <iframe id="content-frame" style="display: none;"></iframe>
+  <div id="empty-state">Select a site from the sidebar to view it here.</div>
+  <script src="sidepanel.js" type="module"></script>
+</body>
+
+</html>

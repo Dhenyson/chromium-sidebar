@@ -1,0 +1,8 @@
+node_modules
+dist/
+*.pem
+*.crx
+calculated_*.txt
+pubkey.txt
+.DS_Store
+.env

@@ -1,0 +1,476 @@
+/* content_sidebar.css */
+
+/* Root Container for the Sidebar */
+#sdbdh-sidebar-root {
+  position: fixed;
+  top: 0;
+  width: 50px;
+  height: 100vh;
+  background-color: #202124; /* Dark gray, chrome-like */
+  z-index: 2147483647; /* Max z-index */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  font-family: sans-serif;
+  color: white;
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth slide */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  will-change: transform;
+}
+
+/* Positioning & Visibility */
+
+/* RIGHT SIDE */
+#sdbdh-sidebar-root.sdbdh-sidebar-right {
+  right: 0;
+  left: auto;
+  border-left: 1px solid rgba(255,255,255,0.1);
+  transform: translateX(0); /* Default visible */
+}
+
+#sdbdh-sidebar-root.sdbdh-sidebar-right.sdbdh-hidden {
+  transform: translateX(100%); /* Slide out to right */
+}
+
+/* LEFT SIDE */
+#sdbdh-sidebar-root.sdbdh-sidebar-left {
+  left: 0;
+  right: auto;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  transform: translateX(0); /* Default visible */
+}
+
+#sdbdh-sidebar-root.sdbdh-sidebar-left.sdbdh-hidden {
+  transform: translateX(-100%); /* Slide out to left */
+}
+
+
+/* Hit Areas for Auto Mode */
+.sdbdh-hit-area {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 15px;
+  z-index: 2147483646; /* Just below sidebar */
+  background: transparent;
+  display: none; /* Hidden by default */
+}
+
+.sdbdh-hit-area.sdbdh-active {
+  display: block;
+}
+
+.sdbdh-hit-area-left {
+  left: 0;
+}
+
+.sdbdh-hit-area-right {
+  right: 0;
+}
+
+
+/* Shared Icon Styles */
+.sdbdh-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s, opacity 0.2s;
+  font-size: 24px;
+}
+
+/* Icon Hover Effect */
+.sdbdh-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dragging Styles */
+.sdbdh-icon.sdbdh-dragging {
+  opacity: 0.5;
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: grabbing;
+}
+
+/* Drag Over Effect (Drop Target - Grouping) */
+.sdbdh-icon.sdbdh-drag-group {
+  border: 2px dashed #8ab4f8; /* Visual cue for grouping */
+  border-radius: 50%;
+}
+
+/* Drag Separators (Reordering) */
+.sdbdh-icon.sdbdh-drag-top {
+  border-top: 2px solid #8ab4f8;
+  border-radius: 0; /* Remove radius for line look, or keep it? */
+  /* To make it look like a line between items, maybe use pseudo-element */
+  position: relative;
+}
+.sdbdh-icon.sdbdh-drag-top::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #8ab4f8;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.sdbdh-icon.sdbdh-drag-bottom {
+  position: relative;
+}
+.sdbdh-icon.sdbdh-drag-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #8ab4f8;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Remove default border from previous impl if any conflict */
+.sdbdh-icon.sdbdh-drag-over {
+  /* Legacy/Fallback */
+  border: 2px dashed #8ab4f8;
+}
+
+/* Group Folder Styles */
+.sdbdh-group-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sdbdh-group-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease-out, margin 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.sdbdh-group-items.sdbdh-expanded {
+  max-height: 500px; /* Arbitrary large height for transition */
+  padding: 5px 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  opacity: 1;
+}
+
+.sdbdh-group-items .sdbdh-icon {
+  transform: scale(0.85); /* Slightly smaller items inside group */
+  margin: 2px 0;
+}
+
+/* Modal Styling */
+.sdbdh-modal-content {
+  background-color: #292a2d;
+  color: #e8eaed;
+  padding: 24px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.sdbdh-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 12px;
+}
+
+.sdbdh-modal-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #f1f3f4;
+}
+
+.sdbdh-close-btn {
+  background: none;
+  border: none;
+  color: #9aa0a6;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sdbdh-close-btn:hover {
+  color: white;
+}
+
+/* Form Elements in Modals */
+.sdbdh-input {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #202124;
+  border: 1px solid #5f6368;
+  border-radius: 6px;
+  color: white;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.sdbdh-input:focus {
+  outline: none;
+  border-color: #8ab4f8;
+  background-color: #28292c;
+}
+
+.sdbdh-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #9aa0a6;
+  font-weight: 500;
+}
+
+.sdbdh-btn {
+  padding: 8px 20px;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.sdbdh-btn:active {
+  transform: scale(0.98);
+}
+
+.sdbdh-btn-primary {
+  background-color: #8ab4f8;
+  color: #202124;
+}
+
+.sdbdh-btn-primary:hover {
+  background-color: #aecbfa;
+}
+
+.sdbdh-radio-group {
+  display: flex;
+  gap: 15px;
+}
+
+.sdbdh-form-group {
+  margin-bottom: 24px;
+}
+
+.sdbdh-radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sdbdh-radio-label input {
+  margin-right: 8px;
+}
+
+/* Color Picker Swatches */
+.sdbdh-color-picker {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sdbdh-color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.sdbdh-color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.sdbdh-color-swatch.selected {
+  border-color: white;
+  box-shadow: 0 0 0 2px #8ab4f8; /* Double ring effect */
+}
+
+/* App list container in sidebar */
+#sdbdh-apps-container {
+  flex-grow: 1; /* Take up available space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto; /* Scroll if too many apps */
+  width: 100%;
+  padding-bottom: 10px; /* Bottom padding */
+  /* Hide scrollbar for cleaner look */
+  scrollbar-width: none; 
+}
+#sdbdh-apps-container::-webkit-scrollbar { 
+  display: none; 
+}
+
+/* App Icon Image Style */
+.sdbdh-app-icon-img {
+  width: 20px; /* Fixed smaller size */
+  height: 20px;
+  border-radius: 4px; /* Slight rounding for the image itself */
+  object-fit: contain;
+  pointer-events: none; /* Let clicks pass to the container */
+}
+
+/* Ensure app icons share exact same dimensions/behavior as system icons */
+#sdbdh-apps-container .sdbdh-icon {
+  flex-shrink: 0; /* Prevent squashing if many apps */
+  margin-top: 0.5rem; /* Consistent spacing */
+}
+
+/* Body Squash Classes (to push page content) */
+.sdbdh-body-squash-left {
+  width: calc(100% - 50px) !important;
+  margin-left: 50px !important;
+  transform: translate3d(0,0,0) !important;
+  box-sizing: border-box !important;
+}
+
+.sdbdh-body-squash-right {
+  width: calc(100% - 50px) !important;
+  margin-right: 50px !important;
+  transform: translate3d(0,0,0) !important;
+  box-sizing: border-box !important;
+}
+
+/* Custom Tooltip Styling */
+#sdbdh-tooltip {
+  position: fixed;
+  z-index: 2147483649; /* Above Modal (2147483648) and Sidebar */
+  background-color: #202124;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+#sdbdh-tooltip.sdbdh-show {
+  opacity: 1;
+}
+
+/* Tooltip Arrow */
+#sdbdh-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  margin-top: -5px; /* Half size */
+  border-width: 5px;
+  border-style: solid;
+}
+
+/* Arrow on Right (Tooltip on Left) */
+#sdbdh-tooltip.sdbdh-tooltip-left::after {
+  right: -10px;
+  border-color: transparent transparent transparent #202124; /* Pointing right */
+}
+
+/* Arrow on Left (Tooltip on Right) */
+#sdbdh-tooltip.sdbdh-tooltip-right::after {
+  left: -10px;
+  border-color: transparent #202124 transparent transparent; /* Pointing left */
+}
+
+/* Context Menu Styling */
+#sdbdh-context-menu {
+  position: fixed;
+  z-index: 2147483650; /* Top most */
+  background-color: rgba(41, 42, 45, 0.95); /* Slightly transparent */
+  backdrop-filter: blur(10px); /* Glassmorphism effect */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 20px 25px -5px rgba(0, 0, 0, 0.5); /* Deep shadow */
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-width: 180px; /* Slightly wider */
+  padding: 6px; /* Inner padding for floating items */
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.95); /* Subtle scale animation start */
+  transform-origin: top left;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+}
+
+#sdbdh-context-menu.sdbdh-show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.sdbdh-context-item {
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e8eaed;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 8px; /* Rounded items */
+  transition: background-color 0.1s;
+  margin-bottom: 2px;
+}
+
+.sdbdh-context-item:last-child {
+  margin-bottom: 0;
+}
+
+.sdbdh-context-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.sdbdh-context-divider {
+  height: 1px;
+  background-color: rgba(255,255,255,0.1);
+  margin: 4px 0;
+}
+
+.sdbdh-text-danger {
+  color: #f28b82; /* Soft red */
+}
+
+.sdbdh-context-icon {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

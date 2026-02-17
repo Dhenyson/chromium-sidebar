@@ -1,0 +1,75 @@
+{
+  "manifest_version": 3,
+  "name": "Chromium Sidebar",
+  "version": "1.0",
+  "description": "A thin sidebar extension for productivity. Quickly access sites, tools, and utilities in a persistent side panel.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "sidePanel",
+    "declarativeNetRequest",
+    "identity",
+    "alarms"
+  ],
+  "oauth2": {
+    "client_id": "CLIENT_ID_PLACEHOLDER",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "action": {
+    "default_popup": "options.html",
+    "default_title": "Sidebar Settings",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "css": [
+        "content_sidebar.css"
+      ],
+      "js": [
+        "content_sidebar.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}
