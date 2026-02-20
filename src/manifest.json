@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chromium Sidebar",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "A thin sidebar extension for productivity. Quickly access sites, tools, and utilities in a persistent side panel.",
   "icons": {
     "16": "icon16.png",
@@ -9,7 +9,6 @@
     "128": "icon128.png"
   },
   "permissions": [
-    "activeTab",
     "storage",
     "sidePanel",
     "declarativeNetRequest",

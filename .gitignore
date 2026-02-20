@@ -6,3 +6,4 @@ calculated_*.txt
 pubkey.txt
 .DS_Store
 .env
+*.zip

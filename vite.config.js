@@ -39,6 +39,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
+      modulePreload: false,
       rollupOptions: {
         input: {
           background: path.resolve(__dirname, 'src/background.js'),
@@ -69,11 +70,11 @@ export default defineConfig(({ mode }) => {
                 manifest.oauth2.client_id = env.VITE_OAUTH_CLIENT_ID;
               }
 
-              // Inject Key from env (for consistent extension ID)
-              if (env.VITE_EXTENSION_KEY) {
+              // Inject Key from env (for consistent extension ID in development only)
+              if (mode !== 'production' && env.VITE_EXTENSION_KEY) {
                 manifest.key = env.VITE_EXTENSION_KEY;
               } else {
-                // Remove key if not provided (so it doesn't use a placeholder or empty string)
+                // Remove key for production builds (Chrome Web Store manages this)
                 delete manifest.key;
               }
 
